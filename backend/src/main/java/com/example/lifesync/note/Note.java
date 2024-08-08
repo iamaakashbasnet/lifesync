@@ -2,6 +2,8 @@ package com.example.lifesync.note;
 
 import com.example.lifesync.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,7 +13,9 @@ import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -31,7 +35,8 @@ public class Note {
     @Column(nullable = false)
     private LocalDateTime updatedTime;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
 }
