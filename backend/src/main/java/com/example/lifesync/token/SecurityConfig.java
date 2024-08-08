@@ -41,8 +41,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/v1/token/login").permitAll();
                     auth.requestMatchers("/api/v1/token/refresh").permitAll();
-                    auth.requestMatchers("/api/v1/passwordmangager/**").hasRole("ROLE_PREMIUM");
+                    auth.requestMatchers("/api/v1/passwordmangager/**").hasRole("PREMIUM");
                     auth.requestMatchers("/users").permitAll();
+                    auth.requestMatchers("/message/**").permitAll();
+                    auth.requestMatchers("/api/v1/email/**").permitAll();
                     auth.anyRequest().permitAll();
                 })
                 .sessionManagement(AbstractHttpConfigurer::disable)
