@@ -14,8 +14,8 @@ import java.time.LocalDateTime;
 @Entity
 public class Note {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Integer id;
 
     @Column(nullable = false)
     private String title;
