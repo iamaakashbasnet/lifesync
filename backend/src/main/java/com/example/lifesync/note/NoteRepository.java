@@ -7,7 +7,9 @@ import com.example.lifesync.user.User;
 import java.util.List;
 
 public interface NoteRepository extends JpaRepository<Note, Integer> {
+
     List<Note> findNoteByUser(User user);
 
     Note findReferenceById(int id);
+
 }

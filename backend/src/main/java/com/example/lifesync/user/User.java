@@ -26,6 +26,8 @@ public class User {
 
     private String password;
 
+    private Boolean premium_user = false;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<UserRole> roles;
