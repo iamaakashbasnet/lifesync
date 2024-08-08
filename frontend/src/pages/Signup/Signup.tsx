@@ -14,7 +14,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import loginShowcase from 'assets/login_showcase.svg';
 import { Link } from 'react-router-dom';
 
-const Login = () => {
+const Signup = () => {
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
   return (
@@ -31,21 +31,20 @@ const Login = () => {
         </div>
 
         <div style={{ flex: 1 }}>
-          <h1 style={{ textAlign: 'center' }}>Login</h1>
+          <h1 style={{ textAlign: 'center' }}>Signup</h1>
           <Stack gap="md">
             <TextInput label="Username" placeholder="eg: johndoe" />
+            <TextInput label="Email" placeholder="eg: example@exmaple.com" />
             <PasswordInput label="Password" placeholder="*********" />
-            <Anchor component={Link} size="xs" to="/login">
-              Forgot password?
-            </Anchor>
-            <Button>Login</Button>
+            <PasswordInput label="Confirm Password" placeholder="*********" />
+            <Button>Signup</Button>
             <Anchor
               component={Link}
               size="xs"
-              to="/signup"
+              to="/login"
               style={{ display: 'block', textAlign: 'right' }}
             >
-              Don't have an account? Sign up now
+              Already have an account? Login now
             </Anchor>
           </Stack>
         </div>
@@ -54,4 +53,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;
