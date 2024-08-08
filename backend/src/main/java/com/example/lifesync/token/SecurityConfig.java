@@ -41,6 +41,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/v1/token/login").permitAll();
                     auth.requestMatchers("/api/v1/token/refresh").permitAll();
+                    auth.requestMatchers("/api/v1/passwordmangager/**").hasRole("ROLE_PREMIUM");
                     auth.requestMatchers("/users").permitAll();
                     auth.anyRequest().permitAll();
                 })

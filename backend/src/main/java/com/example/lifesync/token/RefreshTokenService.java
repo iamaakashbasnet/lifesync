@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -39,8 +38,8 @@ public class RefreshTokenService {
         return refreshTokenRepository.findTokenByToken(token);
     }
 
-    public RefreshToken save(RefreshToken refreshToken) {
-        return refreshTokenRepository.saveAndFlush(refreshToken);
+    public void save(RefreshToken refreshToken) {
+        refreshTokenRepository.saveAndFlush(refreshToken);
     }
 
     public RefreshToken createRefreshToken(String username) {
