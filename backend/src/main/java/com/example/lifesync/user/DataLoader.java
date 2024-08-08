@@ -3,6 +3,7 @@ package com.example.lifesync.user;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class DataLoader {
     @Autowired
     private UserRepository userRepository;
 
-/*    @PostConstruct
+    /*@PostConstruct
     public void dbInit() {
         UserRole authorityUser = new UserRole("ROLE_USER");
         UserRole authorityAdmin = new UserRole("ROLE_ADMIN");
@@ -24,7 +25,7 @@ public class DataLoader {
         authorityRepository.save(authorityUser);
         authorityRepository.save(authorityAdmin);
 
-        User adminuser = new User("admin", "admin", List.of(authorityAdmin));
+        User adminuser = new User("admin", new BCryptPasswordEncoder().encode("admin"), List.of(authorityAdmin));
         userRepository.save(adminuser);
     }*/
 }

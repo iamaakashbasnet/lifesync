@@ -57,8 +57,16 @@ public class TokenService {
 
     public String GenerateToken(String username){
         Map<String, Object> claims = new HashMap<>();
+        claims.put("type", "access");
         return createToken(claims, username);
     }
+
+    public String GenerateRefreshToken(String username){
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("type", "refresh");
+        return createRefreshToken(claims, username);
+    }
+
 
     private String createToken(Map<String, Object> claims, String username) {
 
@@ -66,7 +74,16 @@ public class TokenService {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+1000*60*1))
+                .setExpiration(new Date(System.currentTimeMillis()+1000 * 60 * 60 * 10))
+                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
+    }
+
+    private String createRefreshToken(Map<String, Object> claims, String username) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(username)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+ 1000 * 60 * 60 * 24 * 7))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 

@@ -24,7 +24,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     @Autowired
-    JwtAuthFilter jwtAuthFilter;
+    private JwtAuthFilter jwtAuthFilter;
+
+    @Autowired
+    private JwtTokenFilter jwtTokenFilter;
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -36,13 +39,18 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/api/v1/login").permitAll();
+                    auth.requestMatchers("/api/v1/token/login").permitAll();
+                    auth.requestMatchers("/api/v1/token/refresh").permitAll();
+                    // auth.requestMatchers("/api/v1/token/logout").permitAll();
                     auth.requestMatchers("/users").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class).build();
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(jwtTokenFilter, JwtAuthFilter.class)
+                .build();
+
     }
 
     @Bean

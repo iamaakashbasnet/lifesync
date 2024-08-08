@@ -1,18 +1,14 @@
-package com.example.lifesync.auth;
+package com.example.lifesync.token;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class JwtResponseDTO {
+public class RefreshTokenRequestDTO {
 
-    private String accessToken;
     private String refreshToken;
 
 }
-
