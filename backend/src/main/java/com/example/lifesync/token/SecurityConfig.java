@@ -41,9 +41,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/v1/token/login").permitAll();
                     auth.requestMatchers("/api/v1/token/refresh").permitAll();
-                    // auth.requestMatchers("/api/v1/token/logout").permitAll();
                     auth.requestMatchers("/users").permitAll();
-                    auth.anyRequest().authenticated();
+                    auth.anyRequest().permitAll();
                 })
                 .sessionManagement(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider())
