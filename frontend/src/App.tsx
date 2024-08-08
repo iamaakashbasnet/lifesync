@@ -1,17 +1,16 @@
-import { Center, Flex } from '@mantine/core';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
-import logo from './assets/logo.png';
+import FallbackLoading from 'components/FallbackLoading';
+import CustomRouter from 'routers/router';
 
 function App() {
   return (
-    <Flex justify="center" align="center" style={{ height: '100vh' }}>
-      <Center>
-        <Flex direction="column" align="center">
-          <img width={200} src={logo} alt="logo" />
-          <h1>LifeSync</h1>
-        </Flex>
-      </Center>
-    </Flex>
+    <BrowserRouter>
+      <React.Suspense fallback={<FallbackLoading />}>
+        <CustomRouter />
+      </React.Suspense>
+    </BrowserRouter>
   );
 }
 
