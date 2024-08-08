@@ -12,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class NoteService {
+
     private final NoteRepository noteRepository;
 
     public Note findNoteById(int id) {
@@ -29,4 +30,5 @@ public class NoteService {
     public Note save(Note note) {
         return noteRepository.save(note);
     }
+
 }
