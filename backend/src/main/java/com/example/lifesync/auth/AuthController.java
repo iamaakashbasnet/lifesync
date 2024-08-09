@@ -4,6 +4,7 @@ package com.example.lifesync.auth;
 import com.example.lifesync.token.*;
 import com.example.lifesync.user.User;
 import com.example.lifesync.user.UserRepository;
+import com.example.lifesync.user.UserResponseDTO;
 import com.example.lifesync.user.UserService;
 import com.example.lifesync.utils.UtilFunctions;
 import io.jsonwebtoken.Jwt;
@@ -68,18 +69,23 @@ public class AuthController {
                 refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
             }
 
-            // Set the refresh token in a cookie
             Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken.getToken());
             refreshTokenCookie.setHttpOnly(true);
-            refreshTokenCookie.setSecure(true); // Use true in production
+            refreshTokenCookie.setSecure(true);
             refreshTokenCookie.setPath("/");
-            refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // Set cookie expiration to 7 days
+            refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60);
             response.addCookie(refreshTokenCookie);
 
-            // Generate and return the JWT access token
+            UserResponseDTO reponseUser = UserResponseDTO.builder()
+                    .id(user.getId())
+                    .username(user.getUsername())
+                    .email(user.getEmail())
+                    .premium(user.getPremium_user())
+                    .build();
+
             JwtResponseDTO responseDTO = JwtResponseDTO.builder()
                     .accessToken(jwtService.GenerateToken(authRequestDTO.getUsername()))
-                    .user(user)
+                    .user(reponseUser)
                     .build();
 
             return ResponseEntity.ok(responseDTO);
