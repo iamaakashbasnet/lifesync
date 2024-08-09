@@ -34,10 +34,6 @@ public class RefreshTokenService {
         return refreshTokenRepository.findRefreshTokenByUser(user);
     }
 
-    public RefreshToken getRefreshTokenByToken(String token) {
-        return refreshTokenRepository.findTokenByToken(token);
-    }
-
     public void save(RefreshToken refreshToken) {
         refreshTokenRepository.saveAndFlush(refreshToken);
     }
@@ -46,6 +42,7 @@ public class RefreshTokenService {
         RefreshToken refreshToken = RefreshToken.builder()
                 .user(userService.findByUsername(username))
                 .token(tokenService.GenerateRefreshToken(username))
+                .valid(true)
                 .expiresAt(Instant.now().plusMillis(600000))
                 .build();
         return refreshTokenRepository.save(refreshToken);

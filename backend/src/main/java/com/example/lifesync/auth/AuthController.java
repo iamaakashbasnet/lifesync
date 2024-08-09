@@ -4,6 +4,7 @@ package com.example.lifesync.auth;
 import com.example.lifesync.token.*;
 import com.example.lifesync.user.User;
 import com.example.lifesync.user.UserRepository;
+import com.example.lifesync.user.UserService;
 import com.example.lifesync.utils.UtilFunctions;
 import io.jsonwebtoken.Jwt;
 import jakarta.servlet.http.Cookie;
@@ -30,6 +31,9 @@ import java.util.logging.Logger;
 @RequiredArgsConstructor
 public class AuthController {
     Logger logger = Logger.getLogger(AuthController.class.getName());
+
+    private final TokenService tokenService;
+    private final UserService userService;
 
     private final AuthenticationManager authenticationManager;
 
@@ -82,7 +86,7 @@ public class AuthController {
     public JwtResponseDTO RefreshAndGetToken(@RequestBody RefreshTokenRequestDTO refreshTokenDTO) {
         Optional<RefreshToken> refreshToken = refreshTokenService.findByToken(refreshTokenDTO.getRefreshToken());
         return refreshToken
-                .map(token -> refreshTokenService.verifyExpiration(token))
+                .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
                 .map(user -> {
                     String accessToken = jwtService.GenerateToken(user.getUsername());
@@ -97,7 +101,7 @@ public class AuthController {
         String token = utilFunctions.extractTokenFromRequest(request);
         tokenInvalidateService.invalidateToken(token);
 
-        return ResponseEntity.ok("Successfully loggedout");
+        return ResponseEntity.ok("Successfully logged out");
     }
 
 }
