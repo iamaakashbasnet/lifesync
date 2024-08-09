@@ -62,7 +62,7 @@ public class RefreshTokenService {
                 .user(userService.findByUsername(username))
                 .token(tokenService.GenerateRefreshToken(username))
                 .valid(true)
-                .expiresAt(Instant.now().plusMillis(600000))
+                .expiresAt(Instant.now().plusMillis(1000 * 60 * 60 * 24 * 7))
                 .build();
         return refreshTokenRepository.save(refreshToken);
     }
@@ -74,7 +74,7 @@ public class RefreshTokenService {
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiresAt().isBefore(Instant.now())) {
             refreshTokenRepository.delete(token);
-            throw new RuntimeException(token.getToken() + "Refresh token is expired");
+            throw new RuntimeException(token.getToken() + " " + "Refresh token is expired");
         }
         return token;
     }
