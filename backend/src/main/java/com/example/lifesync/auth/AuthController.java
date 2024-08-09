@@ -79,6 +79,7 @@ public class AuthController {
             // Generate and return the JWT access token
             JwtResponseDTO responseDTO = JwtResponseDTO.builder()
                     .accessToken(jwtService.GenerateToken(authRequestDTO.getUsername()))
+                    .user(user)
                     .build();
 
             return ResponseEntity.ok(responseDTO);
