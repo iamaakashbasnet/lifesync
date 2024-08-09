@@ -5,7 +5,11 @@ import com.example.lifesync.token.*;
 import com.example.lifesync.user.User;
 import com.example.lifesync.user.UserRepository;
 import com.example.lifesync.utils.UtilFunctions;
+import io.jsonwebtoken.Jwt;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
@@ -23,29 +27,26 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController
+@RequiredArgsConstructor
 public class AuthController {
     Logger logger = Logger.getLogger(AuthController.class.getName());
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UtilFunctions utilFunctions;
+    private final UtilFunctions utilFunctions;
 
-    @Autowired
-    private TokenService jwtService;
+    private final TokenService jwtService;
 
-    @Autowired
-    private RefreshTokenService refreshTokenService;
+    private final RefreshTokenService refreshTokenService;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private TokenInvalidateService tokenInvalidateService;
+    private final TokenInvalidateService tokenInvalidateService;
+
+    private final HttpServletResponse response;
 
     @PostMapping("/api/v1/token/login")
-    public JwtResponseDTO AuthenticateAndGetToken(@RequestBody AuthRequestDTO authRequestDTO){
+    public ResponseEntity<JwtResponseDTO> AuthenticateAndGetToken(@RequestBody AuthRequestDTO authRequestDTO){
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUsername(), authRequestDTO.getPassword()));
 
@@ -54,19 +55,24 @@ public class AuthController {
             User user = userRepository.findByUsername(authentication.getName());
 
             RefreshToken refreshToken = refreshTokenService.getRefreshTokenByUser(user);
-            if (refreshToken != null) {
-                return JwtResponseDTO.builder()
-                        .accessToken(jwtService.GenerateToken(authRequestDTO.getUsername()))
-                        .refreshToken(refreshToken.getToken())
-                        .build();
+            if (refreshToken == null) {
+                refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
             }
 
-            RefreshToken refreshTokenTwo = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
+            // Set the refresh token in a cookie
+            Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken.getToken());
+            refreshTokenCookie.setHttpOnly(true);
+            refreshTokenCookie.setSecure(true); // Use true in production
+            refreshTokenCookie.setPath("/");
+            refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60); // Set cookie expiration to 7 days
+            response.addCookie(refreshTokenCookie);
 
-            return JwtResponseDTO.builder()
+            // Generate and return the JWT access token
+            JwtResponseDTO responseDTO = JwtResponseDTO.builder()
                     .accessToken(jwtService.GenerateToken(authRequestDTO.getUsername()))
-                    .refreshToken(refreshTokenTwo.getToken())
                     .build();
+
+            return ResponseEntity.ok(responseDTO);
         } else {
             throw new UsernameNotFoundException("invalid user request..!!");
         }
@@ -82,7 +88,6 @@ public class AuthController {
                     String accessToken = jwtService.GenerateToken(user.getUsername());
                     return JwtResponseDTO.builder()
                             .accessToken(accessToken)
-                            .refreshToken(refreshTokenDTO.getRefreshToken())
                             .build();
                 }).orElseThrow(() -> new RuntimeException("Refresh token not found in db"));
     }
