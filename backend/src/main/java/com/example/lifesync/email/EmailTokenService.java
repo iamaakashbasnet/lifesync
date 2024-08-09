@@ -20,6 +20,11 @@ public class EmailTokenService {
         return secureRandom.nextInt(900000) + 100000;
     }
 
+    public Boolean validateToken(Integer token, User user) {
+        EmailToken emailToken = emailTokenRepository.findTokenByUser(user);
+        return emailToken.getToken().equals(token);
+    }
+
     public EmailToken getTokenByUser(User user) {
         return emailTokenRepository.findTokenByUser(user);
     }
