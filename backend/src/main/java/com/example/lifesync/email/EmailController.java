@@ -8,9 +8,9 @@ import com.example.lifesync.utils.UtilFunctions;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/email")
@@ -49,6 +49,20 @@ public class EmailController {
                 .build();
 
         rabbitMQProducer.send(emailSendDTO);
+    }
+
+    @PostMapping("/verify")
+    @Transactional
+    public ResponseEntity<String> verifyEmail(@RequestBody EmailTokenReceiveDTO emailToken) {
+        String access_token = utilFunctions.extractTokenFromRequest(request);
+        String username = tokenService.extractUsername(access_token);
+        User user = userService.findByUsername(username);
+
+        if (emailTokenService.validateToken(emailToken.getToken(), user)) {
+            return ResponseEntity.ok("Email verified");
+        } else {
+            throw new BadCredentialsException("Token is invalid");
+        }
     }
 
 }
