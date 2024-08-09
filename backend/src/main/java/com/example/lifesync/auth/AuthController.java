@@ -76,7 +76,7 @@ public class AuthController {
             refreshTokenCookie.setMaxAge(7 * 24 * 60 * 60);
             response.addCookie(refreshTokenCookie);
 
-            UserResponseDTO reponseUser = UserResponseDTO.builder()
+            UserResponseDTO responseUser = UserResponseDTO.builder()
                     .id(user.getId())
                     .username(user.getUsername())
                     .email(user.getEmail())
@@ -85,7 +85,7 @@ public class AuthController {
 
             JwtResponseDTO responseDTO = JwtResponseDTO.builder()
                     .accessToken(jwtService.GenerateToken(authRequestDTO.getUsername()))
-                    .user(reponseUser)
+                    .user(responseUser)
                     .build();
 
             return ResponseEntity.ok(responseDTO);
