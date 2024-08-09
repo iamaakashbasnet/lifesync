@@ -1,11 +1,16 @@
 package com.example.lifesync.user;
 
+import com.example.lifesync.token.TokenService;
+import com.example.lifesync.utils.UtilFunctions;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequiredArgsConstructor
 public class UserController {
 
     @GetMapping("/ping")
@@ -17,15 +22,21 @@ public class UserController {
         }
     }
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private UserRoleRepository authorityService;
+    private final UserRoleRepository authorityService;
 
-    @GetMapping("/users/{name}")
-    public ResponseEntity<User> users(@PathVariable String name) {
-        User user = userService.findByUsername(name);
+    private final UtilFunctions utilFunctions;
+
+    private final HttpServletRequest request;
+
+    private final TokenService tokenService;
+
+    @GetMapping("/requestuser")
+    public ResponseEntity<User> users() {
+        String token = utilFunctions.extractTokenFromRequest(request);
+        String username = tokenService.extractUsername(token);
+        User user = userService.findByUsername(username);
         return ResponseEntity.ok(user);
     }
 
