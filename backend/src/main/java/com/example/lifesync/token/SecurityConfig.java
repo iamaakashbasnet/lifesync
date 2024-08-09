@@ -45,7 +45,7 @@ public class SecurityConfig {
                     auth.requestMatchers("/users").permitAll();
                     auth.requestMatchers("/message/**").permitAll();
                     auth.requestMatchers("/api/v1/email/**").permitAll();
-                    auth.anyRequest().permitAll();
+                    auth.anyRequest().authenticated();
                 })
                 .sessionManagement(AbstractHttpConfigurer::disable)
                 .authenticationProvider(authenticationProvider())
