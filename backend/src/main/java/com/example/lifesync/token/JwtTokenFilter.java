@@ -36,6 +36,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return !request.getServletPath().equals("/api/v1/token/logout");
+        String path = request.getServletPath();
+        return path.equals("/api/v1/token/logout") || path.equals("/api/v1/token/login") || path.equals("/users");
     }
 }

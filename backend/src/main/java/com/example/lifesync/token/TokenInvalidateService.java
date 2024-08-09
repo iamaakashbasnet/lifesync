@@ -25,7 +25,7 @@ public class TokenInvalidateService implements TokenInvalidate {
         String username = tokenService.extractUsername(token);
         User user = userService.findByUsername(username);
         RefreshToken refreshToken = refreshTokenService.getRefreshTokenByUser(user);
-        System.out.println(refreshToken);
+        System.out.println(refreshToken.getValid());
         return refreshToken.getValid();
     }
 

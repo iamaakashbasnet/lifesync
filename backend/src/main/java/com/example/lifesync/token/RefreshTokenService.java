@@ -2,7 +2,10 @@ package com.example.lifesync.token;
 
 import com.example.lifesync.user.User;
 import com.example.lifesync.user.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,16 +14,16 @@ import java.util.Optional;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class RefreshTokenService {
 
-    @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private TokenService tokenService;
+    private final TokenService tokenService;
+
+    private final HttpServletRequest request;
 
     public Boolean verifyUserExist(String token) {
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findByToken(token);
@@ -28,6 +31,22 @@ public class RefreshTokenService {
             return refreshtoken.getUser() != null;
         });
         return false;
+    }
+
+    public void deteteRefreshToken(RefreshToken refreshToken) {
+        refreshTokenRepository.delete(refreshToken);
+    }
+
+    public String extractTokenFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("refreshToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        throw new RuntimeException("Refresh token cookie not found");
     }
 
     public RefreshToken getRefreshTokenByUser(User user) {

@@ -59,7 +59,12 @@ public class AuthController {
             User user = userRepository.findByUsername(authentication.getName());
 
             RefreshToken refreshToken = refreshTokenService.getRefreshTokenByUser(user);
-            if (refreshToken == null) {
+            if (refreshToken != null) {
+                if (!refreshToken.getValid()) {
+                    refreshTokenService.deteteRefreshToken(refreshToken);
+                    refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
+                }
+            } else {
                 refreshToken = refreshTokenService.createRefreshToken(authRequestDTO.getUsername());
             }
 
@@ -83,8 +88,12 @@ public class AuthController {
     }
 
     @PostMapping("/api/v1/token/refresh")
-    public JwtResponseDTO RefreshAndGetToken(@RequestBody RefreshTokenRequestDTO refreshTokenDTO) {
-        Optional<RefreshToken> refreshToken = refreshTokenService.findByToken(refreshTokenDTO.getRefreshToken());
+    public JwtResponseDTO RefreshAndGetToken(HttpServletRequest request) {
+        // Optional<RefreshToken> refreshToken = refreshTokenService.findByToken(refreshTokenDTO.getRefreshToken());
+        String refreshTokenFromCookie = refreshTokenService.extractTokenFromCookie(request);
+
+        Optional<RefreshToken> refreshToken = refreshTokenService.findByToken(refreshTokenFromCookie);
+
         return refreshToken
                 .map(refreshTokenService::verifyExpiration)
                 .map(RefreshToken::getUser)
