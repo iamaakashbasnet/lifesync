@@ -41,10 +41,17 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    public ResponseEntity<UserResponseDTO> addUser(@RequestBody User user) {
         System.out.println(user.getPassword());
         userService.save(user);
-        return ResponseEntity.ok(user);
+        UserResponseDTO newUser = UserResponseDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .premium(user.getPremium_user())
+                .build();
+
+        return ResponseEntity.ok(newUser);
     }
 
 
