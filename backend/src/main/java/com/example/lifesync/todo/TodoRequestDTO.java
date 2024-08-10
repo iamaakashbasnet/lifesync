@@ -1,4 +1,4 @@
-package com.example.lifesync.note;
+package com.example.lifesync.todo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,10 +7,13 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NoteRequestDTO {
-
+public class TodoRequestDTO {
     private Integer id;
+
+
+
     private String title;
-    private String content;
+    private String description;
+    private Boolean isCompleted;
 
 }

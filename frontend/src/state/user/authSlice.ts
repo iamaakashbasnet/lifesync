@@ -138,7 +138,7 @@ export const logoutAsync = createAsyncThunk(
   'auth/logoutAsync',
   async (_, thunkAPI) => {
     return axios
-      .post<{ res: AxiosResponse }>('/api/accounts/token/blacklist/')
+      .get<{ res: AxiosResponse }>('/backend/api/v1/token/logout')
       .then((res) => {
         return res.data;
       })
