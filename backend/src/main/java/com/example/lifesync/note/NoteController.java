@@ -38,6 +38,12 @@ public class NoteController {
         return ResponseEntity.ok(note);
     }
 
+    @GetMapping("/getNote/{id}")
+    public ResponseEntity<Note> getNote(@PathVariable Integer id) {
+        Note note = noteService.findNoteById(id);
+        return ResponseEntity.ok(note);
+    }
+
     @PostMapping("/addNote")
     @Transactional
     public ResponseEntity<Note> addNote(@RequestBody NoteRequestDTO note) {
