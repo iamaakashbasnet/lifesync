@@ -152,7 +152,7 @@ export const signupAsync = createAsyncThunk(
   'auth/signupAsync',
   async (signupFormData: SignupFormData, thunkAPI) => {
     return axios
-      .post('/api/accounts/signup/', signupFormData)
+      .post('/backend/users', signupFormData)
       .then(() => {})
       .catch(() => {
         return thunkAPI.rejectWithValue('Something went wrong.');
