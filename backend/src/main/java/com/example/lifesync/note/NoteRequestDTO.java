@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NoteRequestDTO {
 
+    private Integer id;
     private String title;
     private String content;
 

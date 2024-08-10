@@ -56,4 +56,43 @@ public class NoteController {
         return ResponseEntity.ok(newNote);
     }
 
+    @PutMapping("/update")
+    @Transactional
+    public ResponseEntity<Note> updateNote(@RequestBody NoteRequestDTO noteRequest) {
+        String token = utilFunctions.extractTokenFromRequest(httpServletRequest);
+        String username = tokenService.extractUsername(token);
+        User user = userService.findByUsername(username);
+
+        Note existingNote = noteService.findNoteById(noteRequest.getId());
+
+        if (!existingNote.getUser().equals(user)) {
+            return ResponseEntity.status(403).build(); // Forbidden
+        }
+
+        existingNote.setTitle(noteRequest.getTitle());
+        existingNote.setContent(noteRequest.getContent());
+
+        noteService.save(existingNote);
+
+        return ResponseEntity.ok(existingNote);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @Transactional
+    public ResponseEntity<Void> deleteNote(@PathVariable Integer id) {
+        String token = utilFunctions.extractTokenFromRequest(httpServletRequest);
+        String username = tokenService.extractUsername(token);
+        User user = userService.findByUsername(username);
+
+        Note noteToDelete = noteService.findNoteById(id);
+
+        if (!noteToDelete.getUser().equals(user)) {
+            return ResponseEntity.status(403).build();
+        }
+
+        noteService.delete(noteToDelete);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
