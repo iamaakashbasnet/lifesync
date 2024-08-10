@@ -7,6 +7,7 @@ import axios from 'axios';
 
 import App from './App.tsx';
 import './index.css';
+import '@mantine/tiptap/styles.css';
 import { store } from 'state/store.ts';
 
 const theme = createTheme({});
