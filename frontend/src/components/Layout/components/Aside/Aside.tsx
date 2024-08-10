@@ -1,9 +1,24 @@
-import { List, ThemeIcon, rem } from '@mantine/core';
+import { Button, List, ThemeIcon, rem } from '@mantine/core';
 import { IconCircleCheck, IconCircleDashed } from '@tabler/icons-react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { AppDispatch, RootState } from 'state/store';
+import { logoutAsync } from 'state/user/authSlice';
 
 const Aside = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  const logoutHandler = async () => {
+    await dispatch(logoutAsync());
+  };
+
   return (
     <>
+      <h3>Accounts</h3>
+      <p>{user?.username}</p>
+      <Button onClick={logoutHandler}>Logout</Button>
+
       <h3>Latest Updates</h3>
       <List
         spacing="xs"
