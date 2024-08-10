@@ -54,6 +54,7 @@ public class TodoController {
                 .title(todo.getTitle())
                 .description(todo.getDescription())
                 .user(newuser)
+                .isCompleted(false)
                 .build();
         todoService.save(newTodo);
         return ResponseEntity.ok(newTodo);
