@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @Entity
 @Builder
 public class Note {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer id;
@@ -24,6 +25,7 @@ public class Note {
     @Column(nullable = false)
     private String title;
 
+    @Lob
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
