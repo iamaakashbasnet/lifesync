@@ -1,5 +1,6 @@
 import { NavLink } from '@mantine/core';
 import { IconGauge, IconNote } from '@tabler/icons-react';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   return (
@@ -12,8 +13,8 @@ const Navbar = () => {
         fw="bold"
         defaultOpened
       >
-        <NavLink href="#required-for-focus" label="View todos" />
-        <NavLink label="Add todos" href="#required-for-focus" />
+        <NavLink component={Link} to="view-todo" label="View todos" />
+        <NavLink component={Link} to="add-todo" label="Add todos" />
       </NavLink>
 
       <NavLink
@@ -23,8 +24,8 @@ const Navbar = () => {
         childrenOffset={28}
         fw="bold"
       >
-        <NavLink label="View notes" href="#required-for-focus" />
-        <NavLink label="Add notes" href="#required-for-focus" />
+        <NavLink component={Link} to="list-note" label="List notes" />
+        <NavLink component={Link} to="add-note" label="Add notes" />
       </NavLink>
     </>
   );
