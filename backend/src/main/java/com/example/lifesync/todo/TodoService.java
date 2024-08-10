@@ -1,5 +1,7 @@
 package com.example.lifesync.todo;
 
+import com.example.lifesync.note.Note;
+import com.example.lifesync.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +14,20 @@ public class TodoService {
     @Autowired
     private TodoRepository todoRepository;
 
-    public List<TodoEntity> getTodosByUserId(Long userId) {
-        return todoRepository.findByUserId(userId);
+//    public List<TodoEntity> getTodosByUserId(Long userId) {
+//        return todoRepository.findByUserId(userId);
+//    }
+public TodoEntity findNoteById(int id) {
+    return todoRepository.findReferenceById(id);
+}
+public TodoEntity save(TodoEntity note) {
+    return todoRepository.save(note);
+}
+
+    public List<TodoEntity> findTodoByUser(User user) {
+        return todoRepository.findTodoByUser(user);
     }
+
 
     public Optional<TodoEntity> getTodoById(Long id) {
         return todoRepository.findById(id);
@@ -32,8 +45,11 @@ public class TodoService {
         return todoRepository.save(todo);
     }
 
-    public void deleteTodo(Long id) {
-        TodoEntity todo = todoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Todo not found"));
-        todoRepository.delete(todo);
-    }
+//    public void deleteTodo(Long id) {
+//        TodoEntity todo = todoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Todo not found"));
+//        todoRepository.delete(todo);
+//    }
+public void delete(TodoEntity todo) {
+    todoRepository.delete(todo);
+}
 }
