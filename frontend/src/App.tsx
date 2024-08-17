@@ -6,8 +6,11 @@ import FallbackLoading from 'components/FallbackLoading';
 import CustomRouter from 'routers/router';
 import { reAuthAsync } from 'state/user/authSlice';
 import { AppDispatch } from 'state/store';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
+  const queryClient = new QueryClient();
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
@@ -38,11 +41,24 @@ function App() {
     };
   }, [dispatch]);
   return (
-    <BrowserRouter>
-      <React.Suspense fallback={<FallbackLoading />}>
-        <CustomRouter />
-      </React.Suspense>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <React.Suspense fallback={<FallbackLoading />}>
+          <CustomRouter />
+        </React.Suspense>
+      </BrowserRouter>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+    </QueryClientProvider>
   );
 }
 

@@ -8,8 +8,13 @@ import Superscript from '@tiptap/extension-superscript';
 import SubScript from '@tiptap/extension-subscript';
 import { Button, Stack, TextInput } from '@mantine/core';
 import { useState, useEffect } from 'react';
+import { useMutation } from 'react-query';
+
+import { addNote } from './../api';
+import { useNavigate } from 'react-router-dom';
 
 const AddNote = () => {
+  const navigate = useNavigate();
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -45,6 +50,13 @@ const AddNote = () => {
     }
   }, [editor]);
 
+  const { mutateAsync, isLoading } = useMutation({
+    mutationFn: () => addNote(noteData),
+    onSuccess: async () => {
+      navigate('/dashboard/list-note');
+    },
+  });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setNoteData((prevData) => ({
@@ -53,8 +65,8 @@ const AddNote = () => {
     }));
   };
 
-  const handleAddNote = () => {
-    console.log(noteData);
+  const handleAddNote = async () => {
+    await mutateAsync();
   };
 
   return (
@@ -120,7 +132,7 @@ const AddNote = () => {
         </RichTextEditor>
 
         <Button type="button" onClick={handleAddNote}>
-          Add
+          {isLoading ? 'Loading...' : 'Add note'}
         </Button>
       </Stack>
     </>

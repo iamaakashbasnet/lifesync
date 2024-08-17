@@ -41,7 +41,7 @@ export const dashboardRoutes: routerTypes[] = [
   },
   {
     title: 'View Note',
-    path: 'view-note',
+    path: `view-note/:id`,
     element: React.createElement(ViewNote),
   },
 ];
