@@ -3,3 +3,5 @@
 </p>
 <h3 align="center">LifeSync</h3>
 <p align="center">Minimalist Productivity App</p>
+
+> This project was part of the college bootcamp program, and is incomplete as we have to complete the whole app in 6hrs.
